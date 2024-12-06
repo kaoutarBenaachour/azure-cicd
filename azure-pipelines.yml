@@ -219,9 +219,12 @@ steps:
     containerRegistry: az-dockerhub-connection  # Replace with your Azure DevOps Docker service connection.
 
 # Step 3: Trigger deployment on Render
+# - script: |
+#     curl -X POST -H "Authorization: Bearer $(RENDER_API_KEY)" \
+#     -H "Content-Type: application/json" \
+#     -d '{"serviceId": "az-cicd", "clearCache": true}' \
+#     "https://api.render.com/v1/services/az-cicd/deploy"
+#   displayName: 'Trigger Deploy on Render'
 - script: |
-    curl -X POST -H "Authorization: Bearer $(RENDER_API_KEY)" \
-    -H "Content-Type: application/json" \
-    -d '{"serviceId": "az-cicd", "clearCache": true}' \
-    "https://api.render.com/v1/services/az-cicd/deploy"
+    curl -X POST -H "Authorization: Bearer $(RENDER_API_KEY)" -H "Content-Type: application/json" -d "{\"serviceId\": \"az-cicd\", \"clearCache\": true}" "https://api.render.com/v1/services/az-cicd/deploy"
   displayName: 'Trigger Deploy on Render'
