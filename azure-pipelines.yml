@@ -184,11 +184,11 @@ steps:
     targetType: 'inline'
     script: |
       $headers = @{
-          "Authorization" = "Bearer $(RENDER_API_KEY)"
+          "Authorization" = "Bearer $env:RENDER_API_KEY"
           "Content-Type"  = "application/json"
       }
       $body = '{"serviceId": "azure-cicd", "clearCache": true}'
       Invoke-WebRequest -Uri 'https://api.render.com/v1/services/azure-cicd/deploy' -Method Post -Headers $headers -Body $body
   displayName: 'Trigger Deploy on Render'
   env:
-    RENDER_API_KEY: $(RENDER_API_KEY)  # Make sure the environment variable is passed here.
+    RENDER_API_KEY: $(RENDER_API_KEY)  # Ensure that this variable is passed to the script
