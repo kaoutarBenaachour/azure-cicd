@@ -190,7 +190,7 @@ steps:
             "Content-Type"  = "application/json"
         }
         $body = '{"serviceId": "az-cicd:latest", "clearCache": true}'  # Updated serviceId here
-        Invoke-WebRequest -Uri 'https://api.render.com/v1/services/cicd-az/deploy' -Method Post -Headers $headers -Body $body
+        Invoke-WebRequest -Uri 'https://api.render.com/v1/services/az-cicd:latest/deploy' -Method Post -Headers $headers -Body $body
     displayName: 'Trigger Deploy on Render'
     env:
       RENDER_API_KEY: $(RENDER_API_KEY)  # Pass the key from Azure DevOps pipeline variables
