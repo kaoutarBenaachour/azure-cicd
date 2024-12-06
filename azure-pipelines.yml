@@ -148,49 +148,21 @@
 
 
 
-
-trigger:
-  branches:
-    include:
-      - main
-
-pool:
-  name: Default  # Replace 'Default' with the name of your self-hosted agent pool.
-
-steps:
-  - checkout: self
-    fetchDepth: 1
-
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '16.x'
-      addToPath: true
-
-  - script: |
-      npm install
-      npm run build
-    displayName: 'Install Dependencies and Build'
-
-  - script: |
-      npm test
-    displayName: 'Run Tests'
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      artifactName: 'drop'
-      publishLocation: 'Container'
-
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        $headers = @{
-            "Authorization" = "Bearer $env:RENDER_API_KEY"  # Ensure it's correctly referenced in the script
-            "Content-Type"  = "application/json"
-        }
-        $body = '{"serviceId": "cicd-az", "clearCache": true}'  # Updated serviceId here
-        Invoke-WebRequest -Uri 'https://api.render.com/v1/services/cicd-az/deploy' -Method Post -Headers $headers -Body $body
-    displayName: 'Trigger Deploy on Render'
-    env:
-      RENDER_API_KEY: $(RENDER_API_KEY)  # Pass the key from Azure DevOps pipeline variables
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Define headers with the correct API Key and Content-Type
+      $headers = @{
+          "Authorization" = "Bearer $env:RENDER_API_KEY"  # Use environment variable for API Key
+          "Content-Type"  = "application/json"
+      }
+      
+      # Define body with the correct serviceId (without the image tag)
+      $body = '{"serviceId": "az-cicd", "clearCache": true}'
+      
+      # Send request to Render API to trigger deployment
+      Invoke-WebRequest -Uri 'https://api.render.com/v1/services/az-cicd/deploy' -Method Post -Headers $headers -Body $body
+  displayName: 'Trigger Deploy on Render'
+  env:
+    RENDER_API_KEY: $(RENDER_API_KEY)  # Ensure the API key is available in the environment
