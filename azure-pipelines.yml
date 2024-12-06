@@ -135,9 +135,12 @@ steps:
   displayName: 'Push Docker Image'
 
 # Step 5: Trigger deployment on Render
+# - script: |
+#     curl -X POST -H "Authorization: Bearer $(RENDER_API_KEY)" \
+#     -H "Content-Type: application/json" \
+#     -d '{"clearCache": true, "dockerImage": "$(DOCKER_IMAGE_NAME):latest"}' \
+#     "https://api.render.com/v1/services/azure-cicd/deploy"
+#   displayName: 'Trigger Deploy on Render'
 - script: |
-    curl -X POST -H "Authorization: Bearer $(RENDER_API_KEY)" \
-    -H "Content-Type: application/json" \
-    -d '{"clearCache": true, "dockerImage": "$(DOCKER_IMAGE_NAME):latest"}' \
-    "https://api.render.com/v1/services/azure-cicd/deploy"
+    powershell -Command "curl -X POST -H 'Authorization: Bearer $(RENDER_API_KEY)' -H 'Content-Type: application/json' -d '{\"serviceId\": \"azure-cicd\", \"clearCache\": true}' 'https://api.render.com/v1/services/azure-cicd/deploy'"
   displayName: 'Trigger Deploy on Render'
