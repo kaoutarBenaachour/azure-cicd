@@ -142,5 +142,11 @@ steps:
 #     "https://api.render.com/v1/services/azure-cicd/deploy"
 #   displayName: 'Trigger Deploy on Render'
 - script: |
-    powershell -Command "curl -X POST -H 'Authorization: Bearer $(RENDER_API_KEY)' -H 'Content-Type: application/json' -d '{\"serviceId\": \"azure-cicd\", \"clearCache\": true}' 'https://api.render.com/v1/services/azure-cicd/deploy'"
+    $headers = @{
+        "Authorization" = "Bearer $(RENDER_API_KEY)"
+        "Content-Type"  = "application/json"
+    }
+    $body = '{"serviceId": "azure-cicd", "clearCache": true}'
+    Invoke-WebRequest -Uri 'https://api.render.com/v1/services/azure-cicd/deploy' -Method Post -Headers $headers -Body $body
   displayName: 'Trigger Deploy on Render'
+
