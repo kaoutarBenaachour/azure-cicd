@@ -146,7 +146,6 @@
 
 
 
-
 trigger:
   branches:
     include:
@@ -156,30 +155,30 @@ pool:
   name: Default  # Replace 'Default' with the name of your self-hosted agent pool.
 
 steps:
-- checkout: self
-  fetchDepth: 1
+  - checkout: self
+    fetchDepth: 1
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.x'
-    addToPath: true
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '16.x'
+      addToPath: true
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'Install Dependencies and Build'
+  - script: |
+      npm install
+      npm run build
+    displayName: 'Install Dependencies and Build'
 
-- script: |
-    npm test
-  displayName: 'Run Tests'
+  - script: |
+      npm test
+    displayName: 'Run Tests'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'drop'
-    publishLocation: 'Container'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'drop'
+      publishLocation: 'Container'
 
-    - task: PowerShell@2
+  - task: PowerShell@2
     inputs:
       targetType: 'inline'
       script: |
@@ -192,4 +191,3 @@ steps:
     displayName: 'Trigger Deploy on Render'
     env:
       RENDER_API_KEY: $(RENDER_API_KEY)  # Pass the key from Azure DevOps pipeline variables
-  
