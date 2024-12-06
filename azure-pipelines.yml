@@ -126,7 +126,7 @@ steps:
 # Step 4: Push Docker image to Docker Hub
 - task: Docker@2
   inputs:
-    containerRegistry: '<your-docker-registry-service-connection>'
+    containerRegistry: 'az-dockerhub-connection'
     repository: $(DOCKER_IMAGE_NAME)
     command: push
     tags: |
