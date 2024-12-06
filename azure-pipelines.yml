@@ -189,7 +189,7 @@ steps:
             "Authorization" = "Bearer $env:RENDER_API_KEY"  # Ensure it's correctly referenced in the script
             "Content-Type"  = "application/json"
         }
-        $body = '{"serviceId": "cicd-az", "clearCache": true}'  # Updated serviceId here
+        $body = '{"serviceId": "az-cicd:latest", "clearCache": true}'  # Updated serviceId here
         Invoke-WebRequest -Uri 'https://api.render.com/v1/services/cicd-az/deploy' -Method Post -Headers $headers -Body $body
     displayName: 'Trigger Deploy on Render'
     env:
