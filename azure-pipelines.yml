@@ -37,18 +37,76 @@
 #     "https://api.render.com/v1/services/azure-cicd/deploy"
 #   displayName: 'Trigger Deploy on Render'
 
+
+
+
+
+
+
+
+
+
+
+
+# trigger:
+#   branches:
+#     include:
+#       - main
+
+# pool:
+#   name: Default  # Replace 'Default' with the name of your self-hosted agent pool.
+
+# steps:
+# - checkout: self
+#   fetchDepth: 1
+
+# - task: NodeTool@0
+#   inputs:
+#     versionSpec: '16.x'
+#     addToPath: true
+
+# - script: |
+#     npm install
+#     npm run build
+#   displayName: 'Install Dependencies and Build'
+
+# - script: |
+#     npm test
+#   displayName: 'Run Tests'
+
+# - task: PublishBuildArtifacts@1
+#   inputs:
+#     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#     artifactName: 'drop'
+#     publishLocation: 'Container'
+
+# - script: |
+#     curl -X POST https://api.render.com/v1/services/azure-cicd/deploy ^
+#     -H "Authorization: Bearer $(RENDER_API_KEY)" ^
+#     -H "Content-Type: application/json" ^
+#     -d "{\"serviceId\": \"azure-cicd\", \"clearCache\": true}"
+#   displayName: 'Trigger Deploy on Render'
+
+
+
+
 trigger:
   branches:
     include:
       - main
 
 pool:
-  name: Default  # Replace 'Default' with the name of your self-hosted agent pool.
+  name: Default  # Use your self-hosted agent pool.
+
+variables:
+  DOCKER_IMAGE_NAME: kawtark413/az-cicd  # Replace with your Docker Hub repository.
 
 steps:
+# Step 1: Checkout the source code
 - checkout: self
   fetchDepth: 1
 
+# Step 2: Install dependencies and build the app
 - task: NodeTool@0
   inputs:
     versionSpec: '16.x'
@@ -59,19 +117,27 @@ steps:
     npm run build
   displayName: 'Install Dependencies and Build'
 
+# Step 3: Build the Docker image
 - script: |
-    npm test
-  displayName: 'Run Tests'
+    docker build -t $(DOCKER_IMAGE_NAME):$(Build.BuildId) .
+    docker tag $(DOCKER_IMAGE_NAME):$(Build.BuildId) $(DOCKER_IMAGE_NAME):latest
+  displayName: 'Build Docker Image'
 
-- task: PublishBuildArtifacts@1
+# Step 4: Push Docker image to Docker Hub
+- task: Docker@2
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'drop'
-    publishLocation: 'Container'
+    containerRegistry: '<your-docker-registry-service-connection>'
+    repository: $(DOCKER_IMAGE_NAME)
+    command: push
+    tags: |
+      $(Build.BuildId)
+      latest
+  displayName: 'Push Docker Image'
 
+# Step 5: Trigger deployment on Render
 - script: |
-    curl -X POST https://api.render.com/v1/services/azure-cicd/deploy ^
-    -H "Authorization: Bearer $(RENDER_API_KEY)" ^
-    -H "Content-Type: application/json" ^
-    -d "{\"serviceId\": \"azure-cicd\", \"clearCache\": true}"
+    curl -X POST -H "Authorization: Bearer $(RENDER_API_KEY)" \
+    -H "Content-Type: application/json" \
+    -d '{"clearCache": true, "dockerImage": "$(DOCKER_IMAGE_NAME):latest"}' \
+    "https://api.render.com/v1/services/azure-cicd/deploy"
   displayName: 'Trigger Deploy on Render'
