@@ -1,0 +1,26 @@
+﻿{
+  "build_artifactstagingdirectory": "1\\a",
+  "agent_builddirectory": "1",
+  "collectionUrl": "https://dev.azure.com/kawtarbenaachour1/",
+  "definitionName": "kaoutarBenaachour.azure-cicd",
+  "repositoryTrackingInfo": [
+    {
+      "identifier": "self",
+      "repositoryType": "GitHub",
+      "repositoryUrl": "https://github.com/kaoutarBenaachour/azure-cicd",
+      "sourcesDirectory": "1\\s\\azure-cicd"
+    }
+  ],
+  "fileFormatVersion": 3,
+  "lastRunOn": "12/06/2024 18:38:58 +01:00",
+  "repositoryType": "GitHub",
+  "lastMaintenanceAttemptedOn": "",
+  "lastMaintenanceCompletedOn": "",
+  "build_sourcesdirectory": "1\\s",
+  "common_testresultsdirectory": "1\\TestResults",
+  "collectionId": "4eb868e3-d9b8-4bf5-a7d3-4ff26e8eed5a",
+  "definitionId": "2",
+  "hashKey": "a363beb332a146844f116a35577438f4bcc0d617",
+  "repositoryUrl": "https://github.com/kaoutarBenaachour/azure-cicd",
+  "system": "build"
+}
