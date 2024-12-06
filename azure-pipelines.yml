@@ -141,13 +141,15 @@ steps:
 #     -d '{"clearCache": true, "dockerImage": "$(DOCKER_IMAGE_NAME):latest"}' \
 #     "https://api.render.com/v1/services/azure-cicd/deploy"
 #   displayName: 'Trigger Deploy on Render'
-- script: |
-    $headers = @{
-        "Authorization" = "Bearer $(RENDER_API_KEY)"
-        "Content-Type"  = "application/json"
-    }
-    $body = '{"serviceId": "azure-cicd", "clearCache": true}'
-    Invoke-WebRequest -Uri 'https://api.render.com/v1/services/azure-cicd/deploy' -Method Post -Headers $headers -Body $body
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $headers = @{
+          "Authorization" = "Bearer $(RENDER_API_KEY)"
+          "Content-Type"  = "application/json"
+      }
+      $body = '{"serviceId": "azure-cicd", "clearCache": true}'
+      Invoke-WebRequest -Uri 'https://api.render.com/v1/services/azure-cicd/deploy' -Method Post -Headers $headers -Body $body
   displayName: 'Trigger Deploy on Render'
-  shell: powershell
 
