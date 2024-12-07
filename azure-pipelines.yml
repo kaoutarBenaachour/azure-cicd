@@ -233,13 +233,53 @@
 
 
 
+# trigger:
+#   branches:
+#     include:
+#       - main
+
+# pool:
+#   name: Default  # Replace with your self-hosted agent pool name if needed.
+
+# steps:
+# - checkout: self
+#   fetchDepth: 1
+
+# - task: Docker@2
+#   inputs:
+#     containerRegistry: 'az-dockerhub-connection'  # Replace with your Docker registry connection.
+#     repository: 'kawtark413/az-cicd'
+#     command: 'buildAndPush'
+#     Dockerfile: '**/Dockerfile'
+#     tags: 'latest'
+
+# # - powershell: |
+# #     curl.exe -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
+# #     -H "Content-Type: application/json" `
+# #     -d '{\"serviceId\":\"az-cicd\",\"clearCache\":true}' `
+# #     "https://api.render.com/v1/services/az-cicd/deploy"
+# #   displayName: 'Trigger Deploy on Render'
+
+# - powershell: |
+#     $env:RENDER_API_KEY = "rnd_jfxwq0dPNc1w14VYKg4PmO8w6Qws"
+#     curl.exe --verbose -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
+#     -H "Content-Type: application/json" `
+#     --data '{"serviceId":"az-cicd","clearCache":true}' `
+#     "https://api.render.com/v1/services/az-cicd/deploy"
+#   displayName: 'Set Environment & Trigger Render Deploy'
+
+
+
 trigger:
   branches:
     include:
       - main
 
 pool:
-  name: Default  # Replace with your self-hosted agent pool name if needed.
+  name: Default
+
+variables:
+  - group: render-vars  # Make sure this points to the variable group with RENDER_API_KEY.
 
 steps:
 - checkout: self
@@ -247,23 +287,17 @@ steps:
 
 - task: Docker@2
   inputs:
-    containerRegistry: 'az-dockerhub-connection'  # Replace with your Docker registry connection.
+    containerRegistry: 'az-dockerhub-connection'
     repository: 'kawtark413/az-cicd'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
     tags: 'latest'
 
-# - powershell: |
-#     curl.exe -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
-#     -H "Content-Type: application/json" `
-#     -d '{\"serviceId\":\"az-cicd\",\"clearCache\":true}' `
-#     "https://api.render.com/v1/services/az-cicd/deploy"
-#   displayName: 'Trigger Deploy on Render'
-
 - powershell: |
-    $env:RENDER_API_KEY = "rnd_jfxwq0dPNc1w14VYKg4PmO8w6Qws"
     curl.exe --verbose -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
     -H "Content-Type: application/json" `
     --data '{"serviceId":"az-cicd","clearCache":true}' `
     "https://api.render.com/v1/services/az-cicd/deploy"
-  displayName: 'Set Environment & Trigger Render Deploy'
+  displayName: 'Trigger Render Deploy'
+  env:
+    RENDER_API_KEY: $(RENDER_API_KEY)
