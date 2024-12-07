@@ -261,10 +261,9 @@ steps:
 #   displayName: 'Trigger Deploy on Render'
 
 - powershell: |
-    Write-Host "Trigger Deploy Request Payload"
-    Write-Host '{"serviceId":"az-cicd","clearCache":true}'
-    curl.exe -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
+    $env:RENDER_API_KEY = "rnd_jfxwq0dPNc1w14VYKg4PmO8w6Qws"
+    curl.exe --verbose -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
     -H "Content-Type: application/json" `
-    -d '{"serviceId":"az-cicd","clearCache":true}' `
+    --data '{"serviceId":"az-cicd","clearCache":true}' `
     "https://api.render.com/v1/services/az-cicd/deploy"
-  displayName: 'Trigger Deploy on Render'
+  displayName: 'Set Environment & Trigger Render Deploy'
