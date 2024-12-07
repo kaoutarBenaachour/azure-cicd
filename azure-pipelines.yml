@@ -253,10 +253,14 @@ steps:
     Dockerfile: '**/Dockerfile'
     tags: 'latest'
 
-- powershell: |
-    curl.exe -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
-    -H "Content-Type: application/json" `
-    -d '{\"serviceId\":\"az-cicd\",\"clearCache\":true}' `
+# - powershell: |
+#     curl -X POST -H "Authorization: Bearer $(RENDER_API_KEY)" `
+#     -H "Content-Type: application/json" `
+#     -d "{\"serviceId\": \"az-cicd\", \"clearCache\": true}" `
+#     "https://api.render.com/v1/services/az-cicd/deploy"
+#   displayName: 'Trigger Deploy on Render'
+- script: |
+    curl -X POST -H "Authorization: Bearer $(RENDER_API_KEY)" -H "Content-Type: application/json" \
+    -d '{"serviceId": "az-cicd", "clearCache": true}' \
     "https://api.render.com/v1/services/az-cicd/deploy"
   displayName: 'Trigger Deploy on Render'
-
