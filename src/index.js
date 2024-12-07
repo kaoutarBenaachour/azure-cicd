@@ -59,10 +59,6 @@ const server = http.createServer((req, res) => {
 // const PORT = process.env.PORT || 3000;
 const PORT = process.env.PORT || 10000; // Default to 10000 if no PORT is set
 
-// server.listen(PORT, () => {
-//     console.log(`Server is running on http://localhost:${PORT}`);
-// });
 server.listen(PORT, () => {
-    console.log(`Server is running at port: ${PORT}`);
-    console.log(`Environment Variable PORT: ${process.env.PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
