@@ -253,17 +253,17 @@ steps:
     Dockerfile: '**/Dockerfile'
     tags: 'latest'
 
-# - powershell: |
-#     curl.exe -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
-#     -H "Content-Type: application/json" `
-#     -d '{\"serviceId\":\"az-cicd\",\"clearCache\":true}' `
-#     "https://api.render.com/v1/services/az-cicd/deploy"
-#   displayName: 'Trigger Deploy on Render'
-
 - powershell: |
-    $env:RENDER_API_KEY = "rnd_jfxwq0dPNc1w14VYKg4PmO8w6Qws"
-    curl.exe --verbose -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
+    curl.exe -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
     -H "Content-Type: application/json" `
-    --data '{"serviceId":"az-cicd","clearCache":true}' `
+    -d '{\"serviceId\":\"az-cicd\",\"clearCache\":true}' `
     "https://api.render.com/v1/services/az-cicd/deploy"
-  displayName: 'Set Environment & Trigger Render Deploy'
+  displayName: 'Trigger Deploy on Render'
+
+# - powershell: |
+#     $env:RENDER_API_KEY = "rnd_jfxwq0dPNc1w14VYKg4PmO8w6Qws"
+#     curl.exe --verbose -X POST -H "Authorization: Bearer $env:RENDER_API_KEY" `
+#     -H "Content-Type: application/json" `
+#     --data '{"serviceId":"az-cicd","clearCache":true}' `
+#     "https://api.render.com/v1/services/az-cicd/deploy"
+#   displayName: 'Set Environment & Trigger Render Deploy'
